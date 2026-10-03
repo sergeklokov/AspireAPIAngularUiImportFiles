@@ -252,3 +252,35 @@ You should see columns: `Id`, `SourceType`, `LineNumber`, `RawLine`, `FileName`,
 - **"Login failed for user"** — Check the connection string and SQL Server authentication settings.
 - **"File not found"** — When using `/api/import/from-path`, verify the file path exists and is accessible from the server.
 - **"The file field is required"** — When using `/api/import/file`, make sure you actually selected a file in Swagger (don't just type a path).
+
+
+## Migrating Code While Preserving Git History
+Goal
+Move all code and commit history from repository ImportingFilesDemoAPIAngularUI into
+AspireAPIAngularUiImportFiles.
+Prerequisites
+▪ Both repositories are cloned locally.
+▪ Example local paths:
+▪ ../ImportingFilesDemoAPIAngularUI
+▪ ./AspireAPIAngularUiImportFiles
+Steps (PowerShell + Git Commands)
+1. Navigate to the target repository
+Set-Location AspireAPIAngularUiImportFiles
+2. Verify you are on the main branch
+git branch
+git checkout main
+3. Add the source repository as a remote
+git remote add source ../ImportingFilesDemoAPIAngularUI
+4. Verify the remote was added
+git remote -v
+5. Fetch all branches and full commit history
+git fetch source
+6. List fetched branches
+git branch -a
+7. Merge the source repository’s main branch
+git merge source/main --allow-unrelated-histories
+If the source repo uses master:
+git merge source/master --allow-unrelated-histories
+8. Resolve merge conflicts (if any)
+▪ Edit conflicting files
+▪ Stage resolved files
