@@ -4,6 +4,7 @@
     <File Path="git_sergeklokov_setup.bat" />
     <File Path="Readme.md" />
   </Folder>
+  <Project Path="ImportingFilesDemoAPIAngularUI.AppHost/ImportingFilesDemoAPIAngularUI.AppHost.csproj" Id="be2d2611-1930-4a5d-847a-06f6df86795a" />
   <Project Path="importingfilesdemoapiangularui.client/importingfilesdemoapiangularui.client.esproj">
     <Build />
     <Deploy />

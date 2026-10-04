@@ -22,6 +22,70 @@ Brief instructions to run the solution (server + client) and how to expose Swagg
 - Node.js and npm
 - (Optional) Trust the .NET dev certificate for HTTPS: `dotnet dev-certs https --trust`
 
+## Run with .NET Aspire (Recommended)
+
+Aspire is a powerful orchestration framework that manages all services (API, UI, Dashboard) in a single cohesive environment.
+
+### Prerequisites for Aspire
+- .NET 10 SDK with Aspire workload: `dotnet workload restore`
+- All projects must be referenced in the AppHost project (already configured)
+
+### Running the Application
+
+1. **Start the AppHost:**
+   ```bash
+   dotnet run --project ImportingFilesDemoAPIAngularUI.AppHost
+   ```
+   or open the solution in Visual Studio and run the **ImportingFilesDemoAPIAngularUI.AppHost** profile.
+
+2. **Access the services:**
+   - **Aspire Dashboard:** http://localhost:18888 (shows all services, logs, resources, and environment)
+   - **API with Swagger:** Access through the Dashboard or check console output for exact port
+   - **Angular UI:** Access through the Dashboard or check console output for exact port
+   - **Angular Dev Server:** https://localhost:63874 (or dynamically assigned port)
+
+### How Aspire Works
+- **Strongly-Typed Project References:** The AppHost uses `AddProject<Projects.ImportingFilesDemoAPIAngularUI_Server>()` instead of file paths
+- **Dynamic Port Assignment:** Services are assigned random available ports to avoid conflicts
+- **Unified Dashboard:** The Aspire Dashboard provides centralized monitoring of all services, logs, and resource configuration
+- **Environment Management:** Connection strings and environment variables are automatically configured
+
+### AppHost Configuration (AppHost.cs)
+The AppHost defines all services to run:
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add the ASP.NET Core API project
+builder.AddProject<Projects.ImportingFilesDemoAPIAngularUI_Server>("api")
+    .WithExternalHttpEndpoints();
+
+// Add the Angular UI as a JavaScript app
+var ui = builder.AddJavaScriptApp("ui", "../importingfilesdemoapiangularui.client", "start")
+    .WithHttpEndpoint(env: "PORT")
+    .WithExternalHttpEndpoints();
+
+builder.Build().Run();
+```
+
+### Common Aspire Tasks
+
+**Finding Service URLs:**
+- Check the Aspire Dashboard (http://localhost:18888)
+- Look at console output when the AppHost starts
+- Ports are dynamically assigned; note them from the Dashboard
+
+**Adding Services:**
+- Update `AppHost.cs` using `AddProject<>()` for .NET projects or `AddJavaScriptApp()` for Node.js apps
+- Rebuild the AppHost to regenerate the `Projects` class
+
+**Debugging:**
+- Set breakpoints in any service and attach the debugger
+- Monitor logs in real-time from the Dashboard
+- Use `WithExternalHttpEndpoints()` to expose services beyond localhost
+
+---
+
 ## Run the API (server)
 1. From the solution root you can run the server project directly:
    - dotnet restore
